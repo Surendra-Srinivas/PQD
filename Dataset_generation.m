@@ -1,4 +1,4 @@
-%% PQD GENERATION (NORMAL + 14 PQDS) 
+%% PQD GENERATION (NORMAL + 19 PQDS) 
 % 1000 SIGNALS FOR EACH PQD WITH 640 SAMPLE POINTS (1000 signals/class /SNR)
 % TRAIN DATA = 70%, VALIDATION = 20% TEST DATA = 10%
 
@@ -781,7 +781,7 @@ for alpha=0.1:0.0773480663:0.9                         % Runs 10 times
     end
 end
    
-figure(16)
+figure(19)
 plot(t,y)
 title('Oscillatory Transient + Sag');
 
