@@ -1,24 +1,22 @@
-%% PQD GENERATION (NORMAL + 14 PQDS) 
-% 1250 SIGNALS FOR EACH PQD WITH 640 SAMPLE POINTS
-% TOTAL 1250*15 = 18750 PQD SIGNALS
-% TRAIN DATA = 90%, TEST DATA = 10%
+%% PQD GENERATION (NORMAL + 19 PQDS) 
+% 1000 SIGNALS FOR EACH PQD WITH 640 SAMPLE POINTS (1000 signals/class /SNR)
+% TRAIN DATA = 70%, VALIDATION = 20% TEST DATA = 10%
 
 clc
 clear all
 
 pi=3.141592654;
-t_s = 0.0003129;
+t_s = 1/3200;
 t1_s = 0.00074844075;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[];
 
 %% Normal
-
 x = "Normal";
-t = [0: ts :0.2];                   % 640 sample points per disturbance
-
+t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 for f = 49.5:0.02020:50.5    % 1250 different sine waves  (Runs 50 times)
     for vm=0.97:0.0401606:1.03 % (Runs 25 times)
     y = vm*sin(2*pi*f*t);
+    y =awgn(y, SNR);
     z= vertcat(z,y);
     cl=vertcat(cl,x);
     end
@@ -45,7 +43,7 @@ x = "Sag";
 t = [0:ts:0.2];
 f = 50;
 
-for alpha=0.1:0.0163:0.9              % Runs 50 times
+for alpha=0.1:0.0163:0.85              % Runs 50 times
     for t1=0.04:t1_s:0.058         % Runs 25 times
         y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);  %5 cycles
         z=vertcat(z,y);
@@ -118,7 +116,7 @@ L=length(z)+1;
 %% Interruption
 
 x = "Interruption";                            
-t = [0:ts:0.2];
+t = [0:ts:0.2-ts];
 f = 50;
 
 for alpha=0.9:0.00204:1                 % Runs 50 times
@@ -189,8 +187,8 @@ x = "Flicker";
 t = [0:t_s:0.2];
 f = 50;
 
-for alpha_flicker=0.05:0.003058109376:0.2    % Runs 50 times
-    for beta=5:0.08316008316:25              % Runs 25 times
+for alpha_flicker=0.06:0.003058109376:0.2    % Runs 50 times
+    for beta=8:0.08316008316:25              % Runs 25 times
         y=(1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t);
         z= vertcat(z,y);
         cl=vertcat(cl,x);
@@ -241,7 +239,7 @@ for alpha=0.1:0.0773480663:0.8                         % Runs 10 times
         end 
     end
 end
-    
+   
 figure(7)
 plot(t,y)
 title('Oscillatory Transient');
@@ -493,7 +491,7 @@ x = "Flicker+Harmonics";
 t = [0:t_s:0.2];
 f = 50;
 
-for alpha_flicker=0.1:0.01104972376:0.2                 % Runs 10 times
+for alpha_flicker=0.08:0.01104972376:0.2                 % Runs 10 times
     for beta=5:3.703703704:20                          % Runs 5 times
         for alpha3=0.05:0.025:0.15               % Runs 5 times
             for alpha5=0.05:0.02469135802:0.15           % Runs 5 times 
@@ -529,7 +527,7 @@ f = 50;
 
 for alpha=0.1:0.088:0.9                          % Runs 10 times  
     for t1=0.04:0.0044444:0.058                      % Runs 5 times
-        for alpha_flicker=0.1:0.002469135802:0.2          % Runs 5 times
+        for alpha_flicker=0.08:0.002469135802:0.2          % Runs 5 times
             for beta=5:3.703703704:20                      % Runs 5 times          
                 t2=t1+0.1;                %5 cycles
                 y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1-alpha*((heaviside(t-t1)-heaviside(t-t2))));
@@ -574,7 +572,7 @@ f = 50;
 
 for alpha=0.1:0.077:0.8                          % Runs 10 times  
     for t1=0.04:0.0044444:0.058                      % Runs 5 times
-        for alpha_flicker=0.1:0.02469135802:0.2          % Runs 5 times
+        for alpha_flicker=0.08:0.02469135802:0.2          % Runs 5 times
             for beta=5:3.703703704:20                      % Runs 5 times          
                 t2=t1+0.1;                %5 cycles
                 y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1+alpha*((heaviside(t-t1)-heaviside(t-t2))));
@@ -610,3 +608,193 @@ for i=L:length(z)
     end
 end
 L=length(z)+1;
+
+
+%% Osciallatory + Sag
+
+x = "Oscillatory Transient + Sag";                            
+t = [0:t_s:0.2-t_s];
+f = 50;
+
+for alpha=0.1:0.0773480663:0.9                         % Runs 10 times
+    for F_t=300:1160.493827:5000                    % Runs 5 times
+        for t3=0.04:0.01:0.08                   % Runs 5 times
+            for tau=0.008:0.007901234568:0.040          % Runs 5 times
+                t4=t3+0.02;          % 1 cycle
+                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+ %{               
+                t4=t3+0.03;          % 1.5 cycles
+                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) *(alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                
+                t4=t3+0.04;          %2 cycles
+                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) *(alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                %}
+            end
+        end 
+    end
+end
+   
+figure(16)
+plot(t,y)
+title('Oscillatory Transient + Sag');
+
+for i=L:length(z)
+    if rem(i,10)==0 
+        X_test = vertcat(X_test,z(i,:));
+        Y_test = vertcat(Y_test,cl(i));
+    else
+        X_train = vertcat(X_train,z(i,:));
+        Y_train = vertcat(Y_train,cl(i));
+    end
+end
+L=length(z)+1;
+
+
+%% Osciallatory + Swell
+
+x = "Oscillatory Transient + Swell ";                            
+t = [0:t_s:0.2-t_s];
+f = 50;
+
+for alpha=0.1:0.0773480663:0.9                         % Runs 10 times
+    for F_t=300:1160.493827:5000                    % Runs 5 times
+        for t3=0.04:0.01:0.08                   % Runs 5 times
+            for tau=0.008:0.007901234568:0.040          % Runs 5 times
+                t4=t3+0.02;          % 1 cycle
+                y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+ %{               
+                t4=t3+0.03;          % 1.5 cycles
+                y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                
+                t4=t3+0.04;          %2 cycles
+                y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                %}
+            end
+        end 
+    end
+end
+   
+figure(17)
+plot(t,y)
+title('Oscillatory Transient + Swell');
+
+for i=L:length(z)
+    if rem(i,10)==0 
+        X_test = vertcat(X_test,z(i,:));
+        Y_test = vertcat(Y_test,cl(i));
+    else
+        X_train = vertcat(X_train,z(i,:));
+        Y_train = vertcat(Y_train,cl(i));
+    end
+end
+L=length(z)+1;
+
+
+%% Oscillatory Transients + Interruptions
+
+x = "Oscillatory Transient + Interruptions";                            
+t = [0:t_s:0.2-t_s];
+f = 50;
+
+for alpha=0.1:0.0773480663:0.9                         % Runs 10 times
+    for F_t=300:1160.493827:5000                    % Runs 5 times
+        for t3=0.04:0.01:0.08                   % Runs 5 times
+            for tau=0.008:0.007901234568:0.040          % Runs 5 times
+                t4=t3+0.02;          % 1 cycle
+                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+ %{               
+                t4=t3+0.03;          % 1.5 cycles
+                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                
+                t4=t3+0.04;          %2 cycles
+                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                %}
+            end
+        end 
+    end
+end
+   
+figure(18)
+plot(t,y)
+title('Oscillatory Transient + Interruptions');
+
+for i=L:length(z)
+    if rem(i,10)==0 
+        X_test = vertcat(X_test,z(i,:));
+        Y_test = vertcat(Y_test,cl(i));
+    else
+        X_train = vertcat(X_train,z(i,:));
+        Y_train = vertcat(Y_train,cl(i));
+    end
+end
+L=length(z)+1;
+
+
+%% Osciallatory + Harmonics 
+% Ask Sir
+
+x = "Oscillatory Transient + Harmonics";                            
+t = [0:t_s:0.2-t_s];
+f = 50;
+
+for alpha=0.1:0.0773480663:0.9                         % Runs 10 times
+    for F_t=300:1160.493827:5000                    % Runs 5 times
+        for t3=0.04:0.01:0.08                   % Runs 5 times
+            for tau=0.008:0.007901234568:0.040          % Runs 5 times
+                for alpha3=0.05:0.002038735:0.15           % Runs 50 times
+                    for alpha5=0.05:0.004158004158:0.15       % Runs 25 times
+                t4=t3+0.02;          % 1 cycle
+                y= (sin(2*pi*f*t)+ alpha*((heaviside(t-t1)-heaviside(t-t2))).exp(t1-t/tau).*sin(2*pi*F_t*t)) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)). 
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+ %{               
+                t4=t3+0.03;          % 1.5 cycles
+                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                
+                t4=t3+0.04;          %2 cycles
+                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                %}
+            end
+        end 
+    end
+end
+   
+figure(19)
+plot(t,y)
+title('Oscillatory Transient + Sag');
+
+for i=L:length(z)
+    if rem(i,10)==0 
+        X_test = vertcat(X_test,z(i,:));
+        Y_test = vertcat(Y_test,cl(i));
+    else
+        X_train = vertcat(X_train,z(i,:));
+        Y_train = vertcat(Y_train,cl(i));
+    end
+end
+L=length(z)+1;
+
+
+
