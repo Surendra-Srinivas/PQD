@@ -11,7 +11,7 @@ t1_s = 0.54/25;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[]; X_val=[]; Y_val=[];
 SNR = [10, 20, 30, 40, 100];
 snr_len = length(SNR);
-fig_normal = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave with 30db Noise','Sine Wave with 40db Noise','Pure Sine wave'];
+fig_normal = {'Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave with 30db Noise','Sine Wave with 40db Noise','Pure Sine wave'};
 
 %% Normal
 for i = 1:snr_len
@@ -84,7 +84,7 @@ disp(list_test);
 
 
 %% Sag
-fig_sag = ['Sag disturbance with 10db Noise','Sag disturbance with 20db Noise','Sag disturbance with 30db Noise','Sag disturbance with 40db Noise','Sag disturbance with No Noise'];
+fig_sag = {'Sag disturbance with 10db Noise','Sag disturbance with 20db Noise','Sag disturbance with 30db Noise','Sag disturbance with 40db Noise','Sag disturbance with No Noise'};
 x = "Sag";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
@@ -135,7 +135,7 @@ L=length(z)+1;
 x = "Swell";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
-fig_swell = ['Swell disturbance with 10db Noise','Swell disturbance with 20db Noise','Swell disturbance with 30db Noise','Swell disturbance with 40db Noise','Swell disturbance with No Noise'];
+fig_swell = {'Swell disturbance with 10db Noise','Swell disturbance with 20db Noise','Swell disturbance with 30db Noise','Swell disturbance with 40db Noise','Swell disturbance with No Noise'};
 
 for i = 1:snr_len
     for alpha=0.1:0.0175:0.8            % Runs 40 times
@@ -182,7 +182,7 @@ L=length(z)+1;
 x = "Interruption";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
-fig_interruption = ['Interruption disturbance with 10db Noise','Interruption disturbance with 20db Noise','Interruption disturbance with 30db Noise','Interruption disturbance with 40db Noise','Interruption disturbance with No Noise'];
+fig_interruption = {'Interruption disturbance with 10db Noise','Interruption disturbance with 20db Noise','Interruption disturbance with 30db Noise','Interruption disturbance with 40db Noise','Interruption disturbance with No Noise'};
 for i = 1:snr_len
     for alpha=0.9:0.00204:1                 % Runs 50 times
         for t1=0.04:t1_s:0.058           % Runs 25 times
@@ -227,7 +227,7 @@ L=length(z)+1;
 
 x = "Harmonics";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-fig_harmonics = ['Harmonics disturbance with 10db Noise','Harmonics disturbance with 20db Noise','Harmonics disturbance with 30db Noise','Harmonics disturbance with 40db Noise','Harmonics disturbance with No Noise'];
+fig_harmonics = {'Harmonics disturbance with 10db Noise','Harmonics disturbance with 20db Noise','Harmonics disturbance with 30db Noise','Harmonics disturbance with 40db Noise','Harmonics disturbance with No Noise'};
 
 for i = 1:snr_len
     for alpha3=0.05:0.004:0.15                         % Runs 25 times
