@@ -7,11 +7,12 @@ clear all
 
 pi=3.141592654;
 ts = 1/3200;
-t1_s = 0.00074844075;
+t1_s = 0.54/25;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[];
 SNR = [10, 20, 30, 40, 100];
 fig_len = [1,2,3,4];
-fig_title = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave with 30db Noise','Sine Wave with 40db Noise','Pure Sine wave'];
+fig_normal = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave with 30db Noise','Sine Wave with 40db Noise','Pure Sine wave'];
+fig_sag = ['Sag disturbance with 10db Noise','Sag disturbance with 20db Noise','Sag disturbance with 30db Noise','Sag disturbance with 40db Noise','Sag disturbance with No Noise'];
 snr_len = length(SNR);
 
 %% Normal
@@ -54,26 +55,34 @@ x = "Sag";
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
 
-for alpha=0.1:0.0163:0.85              % Runs 50 times
-    for t1=0.04:t1_s:0.058         % Runs 25 times
-        y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);  %5 cycles
-        z=vertcat(z,y);
-        cl=vertcat(cl,x);
-%{        
-        y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t); %4.5 cycles
-        z=vertcat(z,y);
-        cl=vertcat(cl,x);
-        
-        y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t); %3 cycles
-        z=vertcat(z,y);
-        cl=vertcat(cl,x);
-%}
+for i = 1:snr_len
+    for alpha=0.1:0.01875:0.85              % Runs 40 times
+        for t1=0.04:t1_s:0.058              % Runs 25 times
+            y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);  %5 cycles
+            y =awgn(y, SNR[i]);
+            z=vertcat(z,y);
+            cl=vertcat(cl,x);
+    %{        
+            y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t); %4.5 cycles
+            z=vertcat(z,y);
+            cl=vertcat(cl,x);
+            
+            y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t); %3 cycles
+            z=vertcat(z,y);
+            cl=vertcat(cl,x);
+    %}
+        end
     end
+    figure(i)
+    plot(t,y)
+    title(fig_title[i])
 end
 
+%{
 figure(2)
 plot(t,y);
 title('Sag disturbance');
+%}
 
 for i=L:length(z)
     if rem(i,10)==0 
