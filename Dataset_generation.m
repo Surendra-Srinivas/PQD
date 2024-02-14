@@ -54,6 +54,7 @@ t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
 
 for i = 1:snr_len
+    %del_t = [0.1, 0.09, 0.06];
     for alpha=0.1:0.01875:0.85              % Runs 40 times
         for t1=0.04:t1_s:0.058              % Runs 25 times
             y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);  %5 cycles
@@ -98,27 +99,36 @@ L=length(z)+1;
 x = "Swell";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
+fig_swell = ['Swell disturbance with 10db Noise','Swell disturbance with 20db Noise','Swell disturbance with 30db Noise','Swell disturbance with 40db Noise','Swell disturbance with No Noise'];
 
-for alpha=0.1:0.01428:0.8              % Runs 50 times
-    for t1=0.04:t1_s:0.058          % Runs 25 times
-        y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);
-        z=vertcat(z,y);
-        cl=vertcat(cl,x);
- %{       
-        y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t);
-        z=vertcat(z,y);
-        cl=vertcat(cl,x);
-        
-        y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t);
-        z=vertcat(z,y);
-        cl=vertcat(cl,x);
-%}
+for i = 1:snr_len
+    for alpha=0.1:0.0175:0.8            % Runs 40 times
+        for t1=0.04:t1_s:0.058          % Runs 25 times
+            y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);
+            y = awgn(y, SNR(i));
+            z=vertcat(z,y);
+            cl=vertcat(cl,x);
+     %{       
+            y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t);
+            z=vertcat(z,y);
+            cl=vertcat(cl,x);
+            
+            y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t);
+            z=vertcat(z,y);
+            cl=vertcat(cl,x);
+    %}
+        end
     end
+    figure(i)
+    plot(t,y)
+    title(fig_swell(i))
 end
 
+%{
 figure(3)
 plot(t,y);
 title('Swell disturbance');
+}%
 
 for i=L:length(z)
     if rem(i,10)==0 
