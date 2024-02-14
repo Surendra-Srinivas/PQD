@@ -173,14 +173,15 @@ L=length(z)+1;
 
 x = "Harmonics";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha3=0.05:0.002038735:0.15           % Runs 50 times
-    for alpha5=0.05:0.004158004158:0.15       % Runs 25 times
-        alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
-        y = alpha1*sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*pi*f*t);
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);  
+for alpha3=0.05:0.040032026:0.15           % Runs 25 times
+    for alpha5=0.05:0.005005005:0.15       % Runs 20 times
+        for f=49.9:0.1:50                        % Runs 2 times
+            alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
+            y = alpha1*sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*pi*f*t);
+            z= vertcat(z,y);
+            cl=vertcat(cl,x); 
+        end
     end
 end
 
@@ -203,14 +204,15 @@ L=length(z)+1;
 
 x = "Flicker";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha_flicker=0.06:0.003058109376:0.2    % Runs 50 times
-    for beta=8:0.08316008316:25              % Runs 25 times
-        y=(1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t);
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);
+for alpha_flicker=0.06:0.007007007:0.2    % Runs 20 times
+    for beta=8:0.6805444355:25              % Runs 25 times
+        for f=49.9:0.1:50                        % Runs 2 times
+            y=(1+alpha_flicker*sin(beta*2*pi*f*t));
+            z= vertcat(z,y);
+            cl=vertcat(cl,x);
         end
+    end
 end
         
 figure(6)
@@ -456,6 +458,7 @@ end
 L=length(z)+1;
 
 %% Interruption + Harmonics
+%% same formula as sag+harmonic
 
 x = "Interruption+Harmonics";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
@@ -801,7 +804,7 @@ end
    
 figure(19)
 plot(t,y)
-title('Oscillatory Transient + Sag');
+title('Oscillatory Transient + Harmonics');
 
 for i=L:length(z)
     if rem(i,10)==0 
@@ -813,6 +816,41 @@ for i=L:length(z)
     end
 end
 L=length(z)+1;
+
+
+%% Inter-Harmonics
+
+x = "Inter-Harmonics";                            
+t = [0:t_s:0.2];
+f=50;
+%%ask sir about beta values
+B1= 2;
+B2= 5;
+for alpha1=0.05:0.0100200401:0.15           % Runs 10 times
+    for alpha2=0.05:0.0100200401:0.15       % Runs 10 times
+        for alpha3=0.05:0.0200803213:0.15       % Runs 5 times
+        y = alpha1*sin(2*pi*f*t)+ alpha2*sin(B1*2*pi*f*t)+ alpha3*sin(B2*2*pi*f*t);
+        z= vertcat(z,y);
+        cl=vertcat(cl,x);  
+    end
+end
+
+figure(20)
+plot(t,y)
+title('Inter-Harmonics');
+
+for i=L:length(z)
+    if rem(i,10)==0 
+        X_test = vertcat(X_test,z(i,:));
+        Y_test = vertcat(Y_test,cl(i));
+    else
+        X_train = vertcat(X_train,z(i,:));
+        Y_train = vertcat(Y_train,cl(i));
+    end
+end
+L=length(z)+1;
+
+
 
 
 
