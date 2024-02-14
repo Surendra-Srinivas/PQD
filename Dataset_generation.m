@@ -20,7 +20,7 @@ for i = 1:snr_len
     for f = 49.5:0.025:50.5                % 1000 different sine waves  (Runs 40 times)
         for vm=0.97:0.0401606:1.03         % (Runs 25 times)
         y = vm*sin(2*pi*f*t);
-        y =awgn(y, SNR(i);
+        y =awgn(y, SNR(i));
         z= vertcat(z,y);
         cl=vertcat(cl,x);
         end
