@@ -22,14 +22,14 @@ for i = 1:snr_len
     for f = 49.5:0.025:50.5                % 1000 different sine waves  (Runs 40 times)
         for vm=0.97:0.0401606:1.03         % (Runs 25 times)
         y = vm*sin(2*pi*f*t);
-        y =awgn(y, SNR[i]);
+        y =awgn(y, SNR(i);
         z= vertcat(z,y);
         cl=vertcat(cl,x);
         end
     end
     figure(i)
     plot(t,y)
-    title(fig_title[i])
+    title(fig_title(i))
 end
 
 %{
@@ -59,7 +59,7 @@ for i = 1:snr_len
     for alpha=0.1:0.01875:0.85              % Runs 40 times
         for t1=0.04:t1_s:0.058              % Runs 25 times
             y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);  %5 cycles
-            y =awgn(y, SNR[i]);
+            y =awgn(y, SNR(i));
             z=vertcat(z,y);
             cl=vertcat(cl,x);
     %{        
@@ -75,7 +75,7 @@ for i = 1:snr_len
     end
     figure(i)
     plot(t,y)
-    title(fig_title[i])
+    title(fig_title(i))
 end
 
 %{
