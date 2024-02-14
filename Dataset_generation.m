@@ -10,23 +10,32 @@ ts = 1/3200;
 t1_s = 0.00074844075;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[];
 SNR = [10, 20, 30, 40, 100];
+fig_len = [1,2,3,4];
+fig_title = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave with 30db Noise','Sine Wave with 40db Noise','Pure Sine wave'];
+snr_len = length(SNR);
 
 %% Normal
-
-x = "Normal";
-t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-for f = 49.5:0.025:50.5                % 1000 different sine waves  (Runs 40 times)
-    for vm=0.97:0.0401606:1.03         % (Runs 25 times)
-    y = vm*sin(2*pi*f*t);
-    y =awgn(y, SNR);
-    z= vertcat(z,y);
-    cl=vertcat(cl,x);
+for i = 1:snr_len
+    x = "Normal";
+    t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
+    for f = 49.5:0.025:50.5                % 1000 different sine waves  (Runs 40 times)
+        for vm=0.97:0.0401606:1.03         % (Runs 25 times)
+        y = vm*sin(2*pi*f*t);
+        y =awgn(y, SNR[i]);
+        z= vertcat(z,y);
+        cl=vertcat(cl,x);
+        end
     end
+    figure(i)
+    plot(t,y)
+    title(fig_title[i])
 end
 
+%{
 figure(1)
 plot(t,y)
 title('Pure Sine wave')
+%}
 
 for i=1:length(z)
     if rem(i,10)==0 
