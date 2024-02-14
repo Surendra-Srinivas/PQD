@@ -128,7 +128,7 @@ end
 figure(3)
 plot(t,y);
 title('Swell disturbance');
-}%
+%}
 
 for i=L:length(z)
     if rem(i,10)==0 
