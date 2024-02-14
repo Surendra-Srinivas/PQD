@@ -8,7 +8,7 @@ clear all
 pi=3.141592654;
 ts = 1/3200;
 t1_s = 0.54/25;
-z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[];
+z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[]; X_val=[]; Y_val=[];
 SNR = [10, 20, 30, 40, 100];
 snr_len = length(SNR);
 fig_normal = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave with 30db Noise','Sine Wave with 40db Noise','Pure Sine wave'];
@@ -36,6 +36,7 @@ plot(t,y)
 title('Pure Sine wave')
 %}
 
+%{
 for i=1:length(z)
     if rem(i,10)==0 
         X_test = vertcat(X_test,z(i,:));
@@ -46,6 +47,41 @@ for i=1:length(z)
     end
 end
 L=length(z)+1;
+%}
+
+% Split the list into chunks of 10 elements.
+% And split the first 7 elements into train, next 2 elements into val, and the last element into test. 
+% Define the original list
+list = 1:20;
+
+% Initialize lists for train, val, and test
+list_train = [];
+list_val = [];
+list_test = [];
+
+% Loop through the list in chunks of 10 elements
+for i = 1:10:numel(list)
+    chunk = list(i:min(i+9, end));  % Get a chunk of 10 elements or less
+    
+    % Split the chunk into train, val, and test
+    train_chunk = chunk(1:min(7, numel(chunk)));
+    val_chunk = chunk(min(7, numel(chunk))+1:min(9, numel(chunk)));
+    test_chunk = chunk(end);
+    
+    % Append the chunks to their respective lists
+    list_train = [list_train, train_chunk];
+    list_val = [list_val, val_chunk];
+    list_test = [list_test, test_chunk];
+end
+
+% Display the results
+disp('Train list:');
+disp(list_train);
+disp('Validation list:');
+disp(list_val);
+disp('Test list:');
+disp(list_test);
+
 
 %% Sag
 fig_sag = ['Sag disturbance with 10db Noise','Sag disturbance with 20db Noise','Sag disturbance with 30db Noise','Sag disturbance with 40db Noise','Sag disturbance with No Noise'];
