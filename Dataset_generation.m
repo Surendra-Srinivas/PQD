@@ -146,27 +146,35 @@ L=length(z)+1;
 x = "Interruption";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
-
-for alpha=0.9:0.00204:1                 % Runs 50 times
-    for t1=0.04:t1_s:0.058           % Runs 25 times
-        y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);
-%{        
-        y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t);
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);
-                
-        y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t);
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);    
-        %}    
+fig_interruption = ['Interruption disturbance with 10db Noise','Interruption disturbance with 20db Noise','Interruption disturbance with 30db Noise','Interruption disturbance with 40db Noise','Interruption disturbance with No Noise'];
+for i = 1:snr_len
+    for alpha=0.9:0.00204:1                 % Runs 50 times
+        for t1=0.04:t1_s:0.058           % Runs 25 times
+            y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);
+            y = awgn(y, SNR(i));
+            z= vertcat(z,y);
+            cl=vertcat(cl,x);
+    %{        
+            y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t);
+            z= vertcat(z,y);
+            cl=vertcat(cl,x);
+                    
+            y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t);
+            z= vertcat(z,y);
+            cl=vertcat(cl,x);    
+            %}    
+        end
     end
+    figure(i)
+    plot(t,y)
+    title(fig_interruption(i))
 end
 
+%{
 figure(4)
 plot(t,y);
 title('Interruption');
+%}
 
 for i=L:length(z)
     if rem(i,10)==0 
@@ -183,21 +191,30 @@ L=length(z)+1;
 
 x = "Harmonics";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
+fig_harmonics = ['Harmonics disturbance with 10db Noise','Harmonics disturbance with 20db Noise','Harmonics disturbance with 30db Noise','Harmonics disturbance with 40db Noise','Harmonics disturbance with No Noise'];
 
-for alpha3=0.05:0.040032026:0.15           % Runs 25 times
-    for alpha5=0.05:0.005005005:0.15       % Runs 20 times
-        for f=49.9:0.1:50                        % Runs 2 times
-            alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
-            y = alpha1*sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*pi*f*t);
-            z= vertcat(z,y);
-            cl=vertcat(cl,x); 
+for i = 1:snr_len
+    for alpha3=0.05:0.004:0.15                         % Runs 25 times
+        for alpha5=0.05:0.005:0.15                     % Runs 20 times
+            for f=49.9:0.1:50                          % Runs 2 times
+                alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
+                y = alpha1*sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*pi*f*t);
+                y = awgn(y, SNR(i));
+                z= vertcat(z,y);
+                cl=vertcat(cl,x); 
+            end
         end
     end
+    figure(i)
+    plot(t,y)
+    title(fig_harmonics(i))
 end
 
+%{
 figure(5)
 plot(t,y)
 title('Harmonics');
+%}
 
 for i=L:length(z)
     if rem(i,10)==0 
