@@ -10,10 +10,8 @@ ts = 1/3200;
 t1_s = 0.54/25;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[];
 SNR = [10, 20, 30, 40, 100];
-fig_len = [1,2,3,4];
-fig_normal = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave with 30db Noise','Sine Wave with 40db Noise','Pure Sine wave'];
-fig_sag = ['Sag disturbance with 10db Noise','Sag disturbance with 20db Noise','Sag disturbance with 30db Noise','Sag disturbance with 40db Noise','Sag disturbance with No Noise'];
 snr_len = length(SNR);
+fig_normal = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave with 30db Noise','Sine Wave with 40db Noise','Pure Sine wave'];
 
 %% Normal
 for i = 1:snr_len
@@ -29,7 +27,7 @@ for i = 1:snr_len
     end
     figure(i)
     plot(t,y)
-    title(fig_title(i))
+    title(fig_normal(i))
 end
 
 %{
@@ -50,7 +48,7 @@ end
 L=length(z)+1;
 
 %% Sag
-
+fig_sag = ['Sag disturbance with 10db Noise','Sag disturbance with 20db Noise','Sag disturbance with 30db Noise','Sag disturbance with 40db Noise','Sag disturbance with No Noise'];
 x = "Sag";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
@@ -75,7 +73,7 @@ for i = 1:snr_len
     end
     figure(i)
     plot(t,y)
-    title(fig_title(i))
+    title(fig_sag(i))
 end
 
 %{
