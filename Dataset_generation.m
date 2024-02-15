@@ -16,9 +16,9 @@ fig_normal = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave
 %% Normal
 for i = 1:snr_len
     x = "Normal";
-    t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-    for f = 49.5:0.025:50.5                % 1000 different sine waves  (Runs 40 times)
-        for vm=0.97:0.0401606:1.03         % (Runs 25 times)
+    t = [0:ts:0.2-ts];                   % 640 sample points per disturbance (1000 different sine waves)  
+    for f = 49.5:0.025:50.5                % (Runs 40 times)
+        for vm=0.95:0.00416:1.05         % (Runs 25 times)
         y = vm*sin(2*pi*f*t);
         y =awgn(y, SNR(i));
         z= vertcat(z,y);
@@ -52,7 +52,6 @@ fig_sag = ['Sag disturbance with 10db Noise','Sag disturbance with 20db Noise','
 x = "Sag";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
-
 for i = 1:snr_len
     %del_t = [0.1, 0.09, 0.06];
     for alpha=0.1:0.01875:0.85              % Runs 40 times
