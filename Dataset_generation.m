@@ -261,27 +261,28 @@ L=length(z)+1;
 
 x = "Oscillatory Transient";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.1:0.0773480663:0.8                         % Runs 10 times
+for alpha=0.1:0.1398:0.8                         % Runs 5 times
     for F_t=300:1160.493827:5000                    % Runs 5 times
         for t3=0.04:0.01:0.08                   % Runs 5 times
-            for tau=0.008:0.007901234568:0.040          % Runs 5 times
-                t4=t3+0.02;          % 1 cycle
-                y= sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
+            for tau=0.008:0.00795:0.040          % Runs 4 times
+                for f=49.9:0.1:50                           % Runs 2 times
+                    t4=t3+0.02;          % 1 cycle
+                    y= sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
  %{               
-                t4=t3+0.03;          % 1.5 cycles
-                y= sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
+                    t4=t3+0.03;          % 1.5 cycles
+                    y= sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
                 
-                t4=t3+0.04;          %2 cycles
-                y= sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                %}
+                    t4=t3+0.04;          %2 cycles
+                    y= sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    %}
+                end
             end
         end 
     end
@@ -306,30 +307,32 @@ L=length(z)+1;
 
 x = "Notch";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.1:0.0006116207951:0.4;            % Runs 50 times
-    for t1=0.001:0.00037422037642:0.01;        % Runs 25 times
-        t2=t1+0.0005;      % 0.025 cycle
-        sum = 0;
-        for n=0:9
-            sum = sum + ( heaviside(t-(t1+0.02*n))-heaviside(t-(t2+0.02*n)) );
-        end
-        y = sin(2*pi*f*t) - alpha*sign(2*pi*f*t).*sum;
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);
-%{        
-        t2=t1+0.001;       % 0.05 cycle
-        sum = 0;
-        for n=0:9
-            sum = sum + ( heaviside(t-(t1+0.02*n))-heaviside(t-(t2+0.02*n)) );
-        end
-        y = sin(2*pi*f*t) - alpha*sign(2*pi*f*t).*sum;
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);
-    %}
+for alpha=0.1:0.014995:0.4;            % Runs 20 times
+    for t1=0.001:0.00035992:0.01;        % Runs 25 times
+        for f=49.9:0.1:50                        % Runs 2 times
+            t2=t1+0.0005;      % 0.025 cycle
+            sum = 0;
+            for n=0:9
+                sum = sum + ( heaviside(t-(t1+0.02*n))-heaviside(t-(t2+0.02*n)) );
+            end
+            y = sin(2*pi*f*t) - alpha*sign(2*pi*f*t).*sum;
+            z= vertcat(z,y);
+            cl=vertcat(cl,x);
+     %{        
+            t2=t1+0.001;       % 0.05 cycle
+            sum = 0;
+            for n=0:9
+                sum = sum + ( heaviside(t-(t1+0.02*n))-heaviside(t-(t2+0.02*n)) );
+            end
+            y = sin(2*pi*f*t) - alpha*sign(2*pi*f*t).*sum;
+            z= vertcat(z,y);
+            cl=vertcat(cl,x);
+            %}
+         end
     end
 end
+
 
 figure(8)
 plot(t,y)
@@ -350,28 +353,30 @@ L=length(z)+1;
 
 x = "Spike";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.1:0.0006116207951:0.4;            % Runs 50 times
-    for t1=0.001:0.00037422037642:0.01;        % Runs 25 times
-        t2=t1+0.0005;      % 0.025 cycle
-        sum = 0;
-        for n=0:9
-            sum = sum + ( heaviside(t-(t1+0.02*n))-heaviside(t-(t2+0.02*n)) );
+
+for alpha=0.1:0.014995:0.4;            % Runs 20 times
+    for t1=0.001:0.00035992:0.01;        % Runs 25 times
+        for f=49.9:0.1:50                        % Runs 2 times
+            t2=t1+0.0005;      % 0.025 cycle
+            sum = 0;
+            for n=0:9
+                sum = sum + ( heaviside(t-(t1+0.02*n))-heaviside(t-(t2+0.02*n)) );
+            end
+            y = sin(2*pi*f*t) + alpha*sign(2*pi*f*t).*sum;
+            z= vertcat(z,y);
+            cl=vertcat(cl,x);
+     %{       
+            t2=t1+0.001;       % 0.05 cycle
+            sum = 0;
+            for n=0:9
+                sum = sum + ( heaviside(t-(t1+0.02*n))-heaviside(t-(t2+0.02*n)) );
+            end
+            y = sin(2*pi*f*t) + alpha*sign(2*pi*f*t).*sum;
+            z= vertcat(z,y);
+            cl=vertcat(cl,x);
+            %}
         end
-        y = sin(2*pi*f*t) + alpha*sign(2*pi*f*t).*sum;
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);
- %{       
-        t2=t1+0.001;       % 0.05 cycle
-        sum = 0;
-        for n=0:9
-            sum = sum + ( heaviside(t-(t1+0.02*n))-heaviside(t-(t2+0.02*n)) );
-        end
-        y = sin(2*pi*f*t) + alpha*sign(2*pi*f*t).*sum;
-        z= vertcat(z,y);
-        cl=vertcat(cl,x);
-        %}
     end
 end
 
@@ -390,11 +395,12 @@ for i=L:length(z)
 end
 L=length(z)+1;
 
+
 %% Sag + Harmonics
 
 x = "Sag+Harmonics";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
+
 
 for alpha=0.1:0.0888:0.9                         % Runs 10 times  
     for t1=0.04:0.0044444:0.058                    % Runs 5 times
