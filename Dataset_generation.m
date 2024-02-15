@@ -7,7 +7,7 @@ clear all
 
 pi=3.141592654;
 ts = 1/3200;
-t1_s = 0.54/25;
+t1_s = 0.539/25;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[];
 SNR = [10, 20, 30, 40, 100];
 snr_len = length(SNR);
@@ -51,25 +51,27 @@ L=length(z)+1;
 fig_sag = ['Sag disturbance with 10db Noise','Sag disturbance with 20db Noise','Sag disturbance with 30db Noise','Sag disturbance with 40db Noise','Sag disturbance with No Noise'];
 x = "Sag";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
+
 
 for i = 1:snr_len
     %del_t = [0.1, 0.09, 0.06];
-    for alpha=0.1:0.01875:0.85              % Runs 40 times
+    for alpha=0.1:0.03745:0.85              % Runs 20 times
         for t1=0.04:t1_s:0.058              % Runs 25 times
-            y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);  %5 cycles
-            y =awgn(y, SNR(i));
-            z=vertcat(z,y);
-            cl=vertcat(cl,x);
-    %{        
-            y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t); %4.5 cycles
-            z=vertcat(z,y);
-            cl=vertcat(cl,x);
-            
-            y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t); %3 cycles
-            z=vertcat(z,y);
-            cl=vertcat(cl,x);
-    %}
+            for f=49.5:0.5:50
+                y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);  %5 cycles
+                y =awgn(y, SNR(i));
+                z=vertcat(z,y);
+                cl=vertcat(cl,x);
+        %{        
+                y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t); %4.5 cycles
+                z=vertcat(z,y);
+                cl=vertcat(cl,x);
+                
+                y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t); %3 cycles
+                z=vertcat(z,y);
+                cl=vertcat(cl,x);
+        %}
+            end
         end
     end
     figure(i)
