@@ -7,7 +7,7 @@ clear all
 
 pi=3.141592654;
 ts = 1/3200;
-t1_s = 0.539/25;
+t1_s = 0.054/24.9;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[];
 SNR = [10, 20, 30, 40, 100];
 snr_len = length(SNR);
@@ -17,8 +17,8 @@ fig_normal = ['Sine Wave with 10db Noise','Sine Wave with 20db Noise','Sine Wave
 for i = 1:snr_len
     x = "Normal";
     t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-    for f = 49.5:0.025:50.5                % 1000 different sine waves  (Runs 40 times)
-        for vm=0.97:0.0401606:1.03         % (Runs 25 times)
+    for f = 49.5:0.0245:50.5                % 1000 different sine waves  (Runs 40 times)
+        for vm=0.95:0.00396:1.05         % (Runs 25 times)
         y = vm*sin(2*pi*f*t);
         y =awgn(y, SNR(i));
         z= vertcat(z,y);
@@ -55,9 +55,9 @@ t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 
 for i = 1:snr_len
     %del_t = [0.1, 0.09, 0.06];
-    for alpha=0.1:0.03745:0.85              % Runs 20 times
+    for alpha=0.1:0.0376884422:0.85              % Runs 20 times
         for t1=0.04:t1_s:0.058              % Runs 25 times
-            for f=49.5:0.5:50
+            for f=49.9:0.1:50               % Runs 2 times
                 y=(1- alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);  %5 cycles
                 y =awgn(y, SNR(i));
                 z=vertcat(z,y);
@@ -100,25 +100,27 @@ L=length(z)+1;
 
 x = "Swell";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
+
 fig_swell = ['Swell disturbance with 10db Noise','Swell disturbance with 20db Noise','Swell disturbance with 30db Noise','Swell disturbance with 40db Noise','Swell disturbance with No Noise'];
 
 for i = 1:snr_len
-    for alpha=0.1:0.0175:0.8            % Runs 40 times
+    for alpha=0.1:0.0351758794:0.8            % Runs 20 times
         for t1=0.04:t1_s:0.058          % Runs 25 times
-            y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);
-            y = awgn(y, SNR(i));
-            z=vertcat(z,y);
-            cl=vertcat(cl,x);
-     %{       
-            y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t);
-            z=vertcat(z,y);
-            cl=vertcat(cl,x);
-            
-            y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t);
-            z=vertcat(z,y);
-            cl=vertcat(cl,x);
-    %}
+            for f=49.9:0.1:50                        % Runs 2 times
+                y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);
+                y = awgn(y, SNR(i));
+                z=vertcat(z,y);
+                cl=vertcat(cl,x);
+         %{       
+                y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t);
+                z=vertcat(z,y);
+                cl=vertcat(cl,x);
+                
+                y=(1+ alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t);
+                z=vertcat(z,y);
+                cl=vertcat(cl,x);
+            %}
+            end
         end
     end
     figure(i)
@@ -147,24 +149,26 @@ L=length(z)+1;
 
 x = "Interruption";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
+
 fig_interruption = ['Interruption disturbance with 10db Noise','Interruption disturbance with 20db Noise','Interruption disturbance with 30db Noise','Interruption disturbance with 40db Noise','Interruption disturbance with No Noise'];
 for i = 1:snr_len
-    for alpha=0.9:0.00204:1                 % Runs 50 times
+    for alpha=0.9:0.0050251256:1                 % Runs 20 times
         for t1=0.04:t1_s:0.058           % Runs 25 times
-            y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);
-            y = awgn(y, SNR(i));
-            z= vertcat(z,y);
-            cl=vertcat(cl,x);
-    %{        
-            y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t);
-            z= vertcat(z,y);
-            cl=vertcat(cl,x);
-                    
-            y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t);
-            z= vertcat(z,y);
-            cl=vertcat(cl,x);    
-            %}    
+            for f=49.9:0.1:50                        % Runs 2 times
+                y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.1))))).*sin(2*pi*f*t);
+                y = awgn(y, SNR(i));
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+        %{        
+                y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.09))))).*sin(2*pi*f*t);
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);
+                        
+                y=(1-alpha*((heaviside(t-t1)-heaviside(t-(t1+0.06))))).*sin(2*pi*f*t);
+                z= vertcat(z,y);
+                cl=vertcat(cl,x);    
+                %}  
+            end
         end
     end
     figure(i)
@@ -196,8 +200,8 @@ t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 fig_harmonics = ['Harmonics disturbance with 10db Noise','Harmonics disturbance with 20db Noise','Harmonics disturbance with 30db Noise','Harmonics disturbance with 40db Noise','Harmonics disturbance with No Noise'];
 
 for i = 1:snr_len
-    for alpha3=0.05:0.004:0.15                         % Runs 25 times
-        for alpha5=0.05:0.005:0.15                     % Runs 20 times
+    for alpha3=0.05:0.0040160643:0.15                         % Runs 25 times
+        for alpha5=0.05:0.0050251256:0.15                     % Runs 20 times
             for f=49.9:0.1:50                          % Runs 2 times
                 alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
                 y = alpha1*sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*pi*f*t);
@@ -234,8 +238,8 @@ L=length(z)+1;
 x = "Flicker";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 
-for alpha_flicker=0.06:0.007007007:0.2    % Runs 20 times
-    for beta=8:0.6805444355:25              % Runs 25 times
+for alpha_flicker=0.06:0.0070351759:0.2    % Runs 20 times
+    for beta=8:0.6827309237:25              % Runs 25 times
         for f=49.9:0.1:50                        % Runs 2 times
             y=(1+alpha_flicker*sin(beta*2*pi*f*t));
             z= vertcat(z,y);
@@ -264,10 +268,10 @@ L=length(z)+1;
 x = "Oscillatory Transient";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 
-for alpha=0.1:0.1398:0.8                         % Runs 5 times
-    for F_t=300:1160.493827:5000                    % Runs 5 times
+for alpha=0.1:0.1428571429:0.8                         % Runs 5 times
+    for F_t=300:959.186734694:5000                    % Runs 5 times
         for t3=0.04:0.01:0.08                   % Runs 5 times
-            for tau=0.008:0.00795:0.040          % Runs 4 times
+            for tau=0.008:0.0082051282:0.040          % Runs 4 times
                 for f=49.9:0.1:50                           % Runs 2 times
                     t4=t3+0.02;          % 1 cycle
                     y= sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
@@ -310,8 +314,8 @@ L=length(z)+1;
 x = "Notch";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 
-for alpha=0.1:0.014995:0.4;            % Runs 20 times
-    for t1=0.001:0.00035992:0.01;        % Runs 25 times
+for alpha=0.1:0.0150753769:0.4;            % Runs 20 times
+    for t1=0.001:0.0003614458:0.01;        % Runs 25 times
         for f=49.9:0.1:50                        % Runs 2 times
             t2=t1+0.0005;      % 0.025 cycle
             sum = 0;
@@ -357,8 +361,8 @@ x = "Spike";
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 
 
-for alpha=0.1:0.014995:0.4;            % Runs 20 times
-    for t1=0.001:0.00035992:0.01;        % Runs 25 times
+for alpha=0.1:0.0150753769:0.4;            % Runs 20 times
+    for t1=0.001:0.0003614458:0.01;        % Runs 25 times
         for f=49.9:0.1:50                        % Runs 2 times
             t2=t1+0.0005;      % 0.025 cycle
             sum = 0;
@@ -404,28 +408,30 @@ x = "Sag+Harmonics";
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 
 
-for alpha=0.1:0.0888:0.9                         % Runs 10 times  
-    for t1=0.04:0.0044444:0.058                    % Runs 5 times
-        for alpha3=0.05:0.025:0.15               % Runs 5 times
-                for alpha5=0.05:0.02469135802:0.15       % Runs 5 times
-                    alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
-            
-                    t2=t1+0.1;                %5 cycles
-                    y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-%{            
-                    t2=t1+0.09;               %4.5 cycles
-                    y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-            
-                    t2=t1+0.06;               %3 cycles
-                    y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-                    %}
+for alpha=0.1:0.2051282051:0.9                         % Runs 4 times  
+    for t1=0.04:0.0036734694:0.058                    % Runs 5 times
+        for f=49.9:0.1:50                        % Runs 2 times 
+            for alpha3=0.05:0.025:0.15               % Runs 5 times
+                    for alpha5=0.05:0.0204081633:0.15       % Runs 5 times
+                        alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
+                
+                        t2=t1+0.1;                %5 cycles
+                        y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+    %{            
+                        t2=t1+0.09;               %4.5 cycles
+                        y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+                
+                        t2=t1+0.06;               %3 cycles
+                        y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+                        %}
                 end
+            end
         end
     end
 end
@@ -449,30 +455,32 @@ L=length(z)+1;
 
 x = "Swell+Harmonics";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.1:0.0777:0.8                         % Runs 10 times  
-    for t1=0.04:0.0044444:0.058                    % Runs 5 times
-        for alpha3=0.05:0.025:0.15               % Runs 5 times
-                for alpha5=0.05:0.02469135802:0.15       % Runs 5 times
-                    alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
-            
-                    t2=t1+0.1;                %5 cycles
-                    y = (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-%{            
-                    t2=t1+0.09;               %4.5 cycles
-                    y = (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-            
-                    t2=t1+0.06;               %3 cycles
-                    y = (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-                    %}
+
+for alpha=0.1:0.1794871795:0.8                         % Runs 4 times  
+    for t1=0.04:0.0036734694:0.058                    % Runs 5 times
+        for f=49.9:0.1:50                        % Runs 2 times
+            for alpha3=0.05:0.025:0.15               % Runs 5 times
+                    for alpha5=0.05:0.0204081633:0.15       % Runs 5 times
+                        alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
+                
+                        t2=t1+0.1;                %5 cycles
+                        y = (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+    %{            
+                        t2=t1+0.09;               %4.5 cycles
+                        y = (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+                
+                        t2=t1+0.06;               %3 cycles
+                        y = (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+                        %}
                 end
+            end
         end
     end
 end
@@ -497,30 +505,32 @@ L=length(z)+1;
 
 x = "Interruption+Harmonics";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.9:0.0111:1                           % Runs 10 times  
-    for t1=0.04:0.0044444:0.058                    % Runs 5 times
-        for alpha3=0.05:0.025:0.15               % Runs 5 times
-                for alpha5=0.05:0.02469135802:0.15       % Runs 5 times
-                    alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
-            
-                    t2=t1+0.1;                %5 cycles
-                    y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-%{            
-                    t2=t1+0.09;               %4.5 cycles
-                    y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-            
-                    t2=t1+0.06;               %3 cycles
-                    y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                    z= vertcat(z,y);
-                    cl=vertcat(cl,x);
-                    %}
+
+for alpha=0.9:0.0256410256:1                           % Runs 4 times  
+    for t1=0.04:0.0036734694:0.058                    % Runs 5 times
+        for f=49.9:0.1:50                        % Runs 2 times
+            for alpha3=0.05:0.025:0.15               % Runs 5 times
+                    for alpha5=0.05:0.0204081633:0.15       % Runs 5 times
+                        alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
+                
+                        t2=t1+0.1;                %5 cycles
+                        y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+    %{            
+                        t2=t1+0.09;               %4.5 cycles
+                        y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+                
+                        t2=t1+0.06;               %3 cycles
+                        y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                        z= vertcat(z,y);
+                        cl=vertcat(cl,x);
+                        %}
                 end
+            end
         end
     end
 end
@@ -545,16 +555,17 @@ L=length(z)+1;
 
 x = "Flicker+Harmonics";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha_flicker=0.08:0.01104972376:0.2                 % Runs 10 times
+
+for alpha_flicker=0.08:0.0307692308:0.2                 % Runs 4 times
     for beta=5:3.703703704:20                          % Runs 5 times
-        for alpha3=0.05:0.025:0.15               % Runs 5 times
-            for alpha5=0.05:0.02469135802:0.15           % Runs 5 times 
-                alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
-                y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x); 
+        for f=49.9:0.1:50                        % Runs 2 times
+            for alpha3=0.05:0.025:0.15               % Runs 5 times
+                for alpha5=0.05:0.0204081633:0.15           % Runs 5 times 
+                    alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
+                    y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*(alpha1* sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x); 
             end
         end
     end
@@ -579,27 +590,29 @@ L=length(z)+1;
 
 x = "Flicker+Sag";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.1:0.088:0.9                          % Runs 10 times  
-    for t1=0.04:0.0044444:0.058                      % Runs 5 times
-        for alpha_flicker=0.08:0.002469135802:0.2          % Runs 5 times
-            for beta=5:3.703703704:20                      % Runs 5 times          
-                t2=t1+0.1;                %5 cycles
-                y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1-alpha*((heaviside(t-t1)-heaviside(t-t2))));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-%{            
-                t2=t1+0.09;               %4.5 cycles
-                y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1-alpha*((heaviside(t-t1)-heaviside(t-t2))));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-            
-                t2=t1+0.06;               %3 cycles
-                y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1-alpha*((heaviside(t-t1)-heaviside(t-t2))));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                %}
+
+for alpha=0.1:0.2051282051:0.9                          % Runs 4 times  
+    for t1=0.04:0.0036734694:0.058                      % Runs 5 times
+        for f=49.9:0.1:50                        % Runs 2 times
+            for alpha_flicker=0.08:0.0244897959:0.2          % Runs 5 times
+                for beta=5:3.703703704:20                      % Runs 5 times          
+                    t2=t1+0.1;                %5 cycles
+                    y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1-alpha*((heaviside(t-t1)-heaviside(t-t2))));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+    %{            
+                    t2=t1+0.09;               %4.5 cycles
+                    y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1-alpha*((heaviside(t-t1)-heaviside(t-t2))));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                
+                    t2=t1+0.06;               %3 cycles
+                    y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1-alpha*((heaviside(t-t1)-heaviside(t-t2))));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    %}
+                end
             end
         end
     end
@@ -624,27 +637,29 @@ L=length(z)+1;
 
 x = "Flicker+Swell";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.1:0.077:0.8                          % Runs 10 times  
-    for t1=0.04:0.0044444:0.058                      % Runs 5 times
-        for alpha_flicker=0.08:0.02469135802:0.2          % Runs 5 times
+
+for alpha=0.1:0.1794871795:0.8                          % Runs 4 times  
+    for t1=0.04:0.0036734694:0.058                      % Runs 5 times
+        for f=49.9:0.1:50                        % Runs 2 times
+        for alpha_flicker=0.08:0.0244897959:0.2          % Runs 5 times
             for beta=5:3.703703704:20                      % Runs 5 times          
-                t2=t1+0.1;                %5 cycles
-                y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1+alpha*((heaviside(t-t1)-heaviside(t-t2))));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
- %{           
-                t2=t1+0.09;               %4.5 cycles
-                y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1+alpha*((heaviside(t-t1)-heaviside(t-t2))));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-            
-                t2=t1+0.06;               %3 cycles
-                y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1+alpha*((heaviside(t-t1)-heaviside(t-t2))));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                %}
+                    t2=t1+0.1;                %5 cycles
+                    y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1+alpha*((heaviside(t-t1)-heaviside(t-t2))));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+     %{           
+                    t2=t1+0.09;               %4.5 cycles
+                    y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1+alpha*((heaviside(t-t1)-heaviside(t-t2))));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                
+                    t2=t1+0.06;               %3 cycles
+                    y = (1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t).*(1+alpha*((heaviside(t-t1)-heaviside(t-t2))));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    %}
+                end
             end
         end
     end
@@ -672,25 +687,27 @@ x = "Oscillatory Transient + Sag";
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
 f = 50;
 
-for alpha=0.1:0.0773480663:0.9                         % Runs 10 times
-    for F_t=300:1160.493827:5000                    % Runs 5 times
-        for t3=0.04:0.01:0.08                   % Runs 5 times
-            for tau=0.008:0.007901234568:0.040          % Runs 5 times
-                t4=t3+0.02;          % 1 cycle
-                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
- %{               
-                t4=t3+0.03;          % 1.5 cycles
-                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) *(alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                
-                t4=t3+0.04;          %2 cycles
-                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) *(alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                %}
+for alpha=0.1:0.2051282051:0.9                         % Runs 4 times
+    for F_t=300:1160.49382:5000                    % Runs 5 times
+        for f=49.9:0.1:50                        % Runs 2 times
+            for t3=0.04:0.01:0.08                   % Runs 5 times
+                for tau=0.008:0.007901234568:0.040          % Runs 5 times
+                    t4=t3+0.02;          % 1 cycle
+                    y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+     %{               
+                    t4=t3+0.03;          % 1.5 cycles
+                    y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) *(alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    
+                    t4=t3+0.04;          %2 cycles
+                    y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) *(alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    %}
+                end
             end
         end 
     end
@@ -716,27 +733,29 @@ L=length(z)+1;
 
 x = "Oscillatory Transient + Swell ";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.1:0.0773480663:0.9                         % Runs 10 times
+
+for alpha=0.1:0.2051282051:0.9                         % Runs 4 times
     for F_t=300:1160.493827:5000                    % Runs 5 times
-        for t3=0.04:0.01:0.08                   % Runs 5 times
-            for tau=0.008:0.007901234568:0.040          % Runs 5 times
-                t4=t3+0.02;          % 1 cycle
-                y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
- %{               
-                t4=t3+0.03;          % 1.5 cycles
-                y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                
-                t4=t3+0.04;          %2 cycles
-                y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                %}
+        for f=49.9:0.1:50                        % Runs 2 times
+            for t3=0.04:0.01:0.08                   % Runs 5 times
+                for tau=0.008:0.007901234568:0.040          % Runs 5 times
+                    t4=t3+0.02;          % 1 cycle
+                    y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+     %{               
+                    t4=t3+0.03;          % 1.5 cycles
+                    y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    
+                    t4=t3+0.04;          %2 cycles
+                    y= (1+alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    %}
+                end
             end
         end 
     end
@@ -762,27 +781,29 @@ L=length(z)+1;
 
 x = "Oscillatory Transient + Interruptions";                            
 t = [0: ts :0.2-ts];                   % 640 sample points per disturbance
-f = 50;
 
-for alpha=0.1:0.0773480663:0.9                         % Runs 10 times
+
+for alpha=0.1:0.2051282051:0.9                         % Runs 4 times
     for F_t=300:1160.493827:5000                    % Runs 5 times
-        for t3=0.04:0.01:0.08                   % Runs 5 times
-            for tau=0.008:0.007901234568:0.040          % Runs 5 times
-                t4=t3+0.02;          % 1 cycle
-                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
- %{               
-                t4=t3+0.03;          % 1.5 cycles
-                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                
-                t4=t3+0.04;          %2 cycles
-                y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
-                z= vertcat(z,y);
-                cl=vertcat(cl,x);
-                %}
+        for f=49.9:0.1:50                        % Runs 2 times
+            for t3=0.04:0.01:0.08                   % Runs 5 times
+                for tau=0.008:0.007901234568:0.040          % Runs 5 times
+                    t4=t3+0.02;          % 1 cycle
+                    y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) * (alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t));
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+     %{               
+                    t4=t3+0.03;          % 1.5 cycles
+                    y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    
+                    t4=t3+0.04;          %2 cycles
+                    y= (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))) + sin(2*pi*f*t)+ alpha*(heaviside(t-t3)-heaviside(t-t4)).*exp(t3-t/tau).*sin(2*pi*F_t*t);
+                    z= vertcat(z,y);
+                    cl=vertcat(cl,x);
+                    %}
+                end
             end
         end 
     end
