@@ -1,2 +1,2 @@
 # PQD
-Power Quality Disturbances detection and classification using CNN and TCN.
+Classification of Power Quality Disturbances using Convolutional Neural Networks and Temporal Convolutional Networks.
