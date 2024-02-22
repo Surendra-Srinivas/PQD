@@ -6,9 +6,9 @@ clc
 clear all
 
 ts = 1/3200;
-t1_s = 0.54/24.9;
+t1_s = 0.018/24.9;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[]; X_val=[]; Y_val=[];
-SNR = [10, 20, 30, 40, 100];
+SNR = [20, 30, 40, 100];
 snr_len = length(SNR);
 iter_disp = 'Iteration count ';
 
