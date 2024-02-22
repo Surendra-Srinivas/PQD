@@ -6,7 +6,6 @@ clc
 clear all
 
 ts = 1/3200;
-t1_s = 0.54/24.9;
 z=[]; cl=[]; X_train=[]; Y_train=[]; X_test=[]; Y_test=[]; X_val=[]; Y_val=[];
 SNR = [20, 30, 40, 100];
 snr_len = length(SNR);
@@ -82,7 +81,7 @@ counter=0;
 for i = 1:snr_len
     count=0;
     for alpha=0.1:0.0376884422:0.85              % Runs 20 times
-        for t1=0.04:t1_s:0.058              % Runs 25 times
+        for t1=0.04:0.0007228916:0.058              % Runs 25 times
             for f=49.9:0.1:50               % Runs 2 times
             counter=counter+1;
             if(rem(counter,500)==0)
@@ -114,7 +113,7 @@ counter=0;
 for i = 1:snr_len
     count=0;
     for alpha=0.1:0.0351758794:0.8                   % Runs 20 times
-        for t1=0.04:t1_s:0.058                       % Runs 25 times
+        for t1=0.04:0.0007228916:0.058                       % Runs 25 times
             for f=49.9:0.1:50                        % Runs 2 times
             counter=counter+1;
             if(rem(counter,500)==0)
@@ -147,7 +146,7 @@ counter=0;
 for i = 1:snr_len
     count=0;
     for alpha=0.9:0.0050251256:1                    % Runs 20 times
-        for t1=0.04:t1_s:0.058                      % Runs 25 times
+        for t1=0.04:0.0007228916:0.058                      % Runs 25 times
             for f=49.9:0.1:50                       % Runs 2 times
             counter=counter+1;
             if(rem(counter,500)==0)
