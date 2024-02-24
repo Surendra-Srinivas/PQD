@@ -36,7 +36,38 @@ for i = 1:snr_len
     title(fig_normal(i))
 end
 
+matrix = z;
 
+% Define the matrix
+[m, n] = size(matrix); % assuming 'matrix' is your m by n matrix
+
+% Initialize cell arrays for train, val, and test
+sine_train = [];
+sine_val = [];
+sine_test = [];
+
+% Loop through the matrix in chunks of 10 rows
+for i = 1:10:m
+    chunk = matrix(i:min(i+9, m), :);  % Get a chunk of 10 rows or less
+    
+    % Split the chunk into train, val, and test
+    train_chunk = chunk(1:min(7, size(chunk, 1)), :);
+    val_chunk = chunk(min(7, size(chunk, 1))+1:min(9, size(chunk, 1)), :);
+    test_chunk = chunk(end, :);
+    
+    % Append the chunks to their respective lists
+    %list_train = [list_train; {train_chunk}];
+    sine_train = vertcat(sine_train, train_chunk);
+    %list_val = [list_val; {val_chunk}];
+    sine_val = vertcat(sine_val, val_chunk);
+    %list_test = [list_test; {test_chunk}];
+    sine_test = vertcat(sine_test, test_chunk);
+end
+
+% Save the matrices into a .mat file
+save('data.mat', 'sine_train', 'sine_val', 'sine_test');
+
+"""
 % Split the list into chunks of 10 elements.
 % And split the first 7 elements into train, next 2 elements into val, and the last element into test. 
 % Define the original list
@@ -69,6 +100,9 @@ disp('Validation list:');
 disp(list_val);
 disp('Test list:');
 disp(list_test);
+"""
+
+
 
 
 %% Sag
