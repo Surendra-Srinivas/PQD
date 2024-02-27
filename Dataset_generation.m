@@ -65,7 +65,7 @@ for i = 1:10:m
 end
 
 % Save the matrices into a .mat file
-save('data.mat', 'sine_train', 'sine_val', 'sine_test');
+save('Sine_data.mat', 'sine_train', 'sine_val', 'sine_test');
 
 """
 % Split the list into chunks of 10 elements.
