@@ -6,8 +6,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense
 from tensorflow.keras.utils import to_categorical
 
-num_classes = 4
-classes = ['Normal', 'Sag', 'Swell', 'Interruption']
+num_classes = 6
+classes = ['Normal', 'Sag', 'Swell', 'Interruption', 'Notch', 'Spike']
 
 Sine_data = scipy.io.loadmat('Sine_data.mat')
 X_Sine_train = Sine_data['sine_train']
@@ -49,6 +49,26 @@ y_Interruption_label_train = Interruption_label_data['interruption_label_train']
 y_Interruption_label_val = Interruption_label_data['interruption_label_val']
 y_Interruption_label_test = Interruption_label_data['interruption_label_test']
 
+Notch_data = scipy.io.loadmat('Notch_data.mat')
+X_Notch_train = Notch_data['notch_train']
+X_Notch_val = Notch_data['notch_val']
+X_Notch_test = Notch_data['notch_test']
+
+Notch_label_data = scipy.io.loadmat('Notch_label_data.mat')
+y_Notch_label_train = Notch_label_data['notch_label_train']
+y_Notch_label_val = Notch_label_data['notch_label_val']
+y_Notch_label_test = Notch_label_data['notch_label_test']
+
+Spike_data = scipy.io.loadmat('Spike_data.mat')
+X_Spike_train = Spike_data['spike_train']
+X_Spike_val = Spike_data['spike_val']
+X_Spike_test = Spike_data['spike_test']
+
+Spike_label_data = scipy.io.loadmat('Spike_label_data.mat')
+y_Spike_label_train = Spike_label_data['spike_label_train']
+y_Spike_label_val = Spike_label_data['spike_label_val']
+y_Spike_label_test = Spike_label_data['spike_label_test']
+
 # Convert lists of arrays to numpy arrays
 X_Sine_train = np.array([np.vstack(chunk) for chunk in X_Sine_train])
 X_Sine_val = np.array([np.vstack(chunk) for chunk in X_Sine_val])
@@ -85,14 +105,32 @@ y_Interruption_label_train = y_Interruption_label_train.reshape(np.shape(X_Inter
 y_Interruption_label_test = y_Interruption_label_test.reshape(np.shape(X_Interruption_test)[0])
 y_Interruption_label_val = y_Interruption_label_val.reshape(np.shape(X_Interruption_val)[0])
 
-X_train = np.concatenate([X_Sine_train, X_Sag_train, X_Swell_train, X_Interruption_train], axis = 0)
-y_train = np.concatenate([y_Sine_label_train, y_Sag_label_train, y_Swell_label_train, y_Interruption_label_train], axis = 0)
+# Convert lists of arrays to numpy arrays
+X_Notch_train = np.array([np.vstack(chunk) for chunk in X_Notch_train])
+X_Notch_val = np.array([np.vstack(chunk) for chunk in X_Notch_val])
+X_Notch_test = np.array([np.vstack(chunk) for chunk in X_Notch_test])
 
-X_test = np.concatenate([X_Sine_test, X_Sag_test, X_Swell_test, X_Interruption_test], axis = 0)
-y_test = np.concatenate([y_Sine_label_test, y_Sag_label_test, y_Swell_label_test, y_Interruption_label_test], axis = 0)
+y_Notch_label_train = y_Notch_label_train.reshape(np.shape(X_Notch_train)[0])
+y_Notch_label_test = y_Notch_label_test.reshape(np.shape(X_Notch_test)[0])
+y_Notch_label_val = y_Notch_label_val.reshape(np.shape(X_Notch_val)[0])
 
-X_val = np.concatenate([X_Sine_val, X_Sag_val, X_Swell_val, X_Interruption_val], axis = 0)
-y_val = np.concatenate([y_Sine_label_val, y_Sag_label_val, y_Swell_label_val, y_Interruption_label_val], axis = 0)
+# Convert lists of arrays to numpy arrays
+X_Spike_train = np.array([np.vstack(chunk) for chunk in X_Spike_train])
+X_Spike_val = np.array([np.vstack(chunk) for chunk in X_Spike_val])
+X_Spike_test = np.array([np.vstack(chunk) for chunk in X_Spike_test])
+
+y_Spike_label_train = y_Notch_label_train.reshape(np.shape(X_Spike_train)[0])
+y_Spike_label_test = y_Notch_label_test.reshape(np.shape(X_Spike_test)[0])
+y_Spike_label_val = y_Notch_label_val.reshape(np.shape(X_Spike_val)[0])
+
+X_train = np.concatenate([X_Sine_train, X_Sag_train, X_Swell_train, X_Interruption_train, X_Notch_train, X_Spike_train], axis = 0)
+y_train = np.concatenate([y_Sine_label_train, y_Sag_label_train, y_Swell_label_train, y_Interruption_label_train, y_Notch_label_train, y_Spike_label_train], axis = 0)
+
+X_test = np.concatenate([X_Sine_test, X_Sag_test, X_Swell_test, X_Interruption_test, X_Notch_test, X_Spike_test], axis = 0)
+y_test = np.concatenate([y_Sine_label_test, y_Sag_label_test, y_Swell_label_test, y_Interruption_label_test, y_Notch_label_test, y_Spike_label_test], axis = 0)
+
+X_val = np.concatenate([X_Sine_val, X_Sag_val, X_Swell_val, X_Interruption_val, X_Notch_val, X_Spike_val], axis = 0)
+y_val = np.concatenate([y_Sine_label_val, y_Sag_label_val, y_Swell_label_val, y_Interruption_label_val, y_Notch_label_val, y_Spike_label_val], axis = 0)
 
 y_train = to_categorical(y_train, num_classes = num_classes)
 y_test = to_categorical(y_test, num_classes = num_classes)
@@ -102,11 +140,15 @@ print('The shape of X_Sine_train is : ',np.shape(X_Sine_train))
 print('The shape of X_Sag_train is : ',np.shape(X_Sag_train))
 print('The shape of X_Swell_train is : ',np.shape(X_Swell_train))
 print('The shape of X_Interruption_train is : ',np.shape(X_Interruption_train))
+print('The shape of X_Notch_train is : ',np.shape(X_Notch_train))
+print('The shape of X_Spike_train is : ',np.shape(X_Spike_train))
 
 print('The shape of y_Sine_label_train is : ',np.shape(y_Sine_label_train))
 print('The shape of y_Sag_label_train is : ',np.shape(y_Sag_label_train))
 print('The shape of y_Swell_label_train is : ',np.shape(y_Swell_label_train))
 print('The shape of y_Interruption_label_train is : ',np.shape(y_Interruption_label_train))
+print('The shape of y_Notch_label_train is : ',np.shape(y_Notch_label_train))
+print('The shape of y_Spike_label_train is : ',np.shape(y_Spike_label_train))
 
 print("The shape of X_train is : ", np.shape(X_train))
 print("The shape of y_train is : ", np.shape(y_train))
