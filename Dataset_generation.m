@@ -209,29 +209,31 @@ fig_harmonics = {'Harmonics disturbance with 20db Noise','Harmonics disturbance 
 
 counter=0;
 for i = 1:snr_len
-    h1=3;
-    h2=5;
+    h1=7;
     count=0;
-    for alpha3=0.05:0.0040160643:0.15                         % Runs 25 times
-        for alpha5=0.05:0.0050251256:0.15                     % Runs 20 times
-            for f=49.9:0.1:50                          % Runs 2 times
-            counter=counter+1;
-            if(rem(counter,500)==0)
-                disp(iter_disp)
-                disp(counter)
-            end
-            count=count+1;
-            if(rem(count,200)==0)
-                   h1=h1+4;   %%3,7,11,15,19
-                   h2=h2+4;     %5,9,13,17,21
-            end
-                alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
-                y = alpha1*sin(2*pi*f*t)+ alpha3*sin(h1*2*pi*f*t)+ alpha5*sin(h2*pi*f*t);
+    for alpha3=0.05:0.0040160643:0.15            % Runs 25 times  
+        for frac1=0.5:0.1:0.8                     % Runs 4 times
+           alpha5 = alpha3*frac1;
+            for frac2=0.4:0.1:0.8                     % Runs 5 times
+                alpha7 = alpha5*frac2;
+                for f=49.95:0.1:50.1                         % Runs 2  times
+                    counter=counter+1;
+                    if(rem(counter,500)==0)
+                        disp(iter_disp)
+                        disp(counter)
+                    end
+                    count=count+1;
+                    if(rem(count,125)==0)
+                        h1=h1+2;   %%7,9,11,13,15,17,19,21
+                    end
+                alpha1 = sqrt(1 - alpha3^2 - alpha5^2- alpha7^2);
+                y = alpha1*sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(10*pi*f*t)+ alpha7*sin(2*h1*pi*f*t);
                 y = awgn(y, SNR(i));
                 z= vertcat(z,y);
                 cl=vertcat(cl,x); 
             end
         end
+    end
     end
     figure(i)
     plot(t,y)
@@ -246,15 +248,15 @@ t = [0: ts :0.2-ts];                            % 640 sample points per disturba
 
 counter=0;
 for i = 1:snr_len
-    for alpha_flicker=0.06:0.0.007035175879:0.2       % Runs 20 times
-        for beta=8:0.0.6827309237:25                  % Runs 25 times
+    for alpha_flicker=0.06:0.007035175879:0.2       % Runs 20 times
+        for beta=8:0.6827309237:25                  % Runs 25 times
             for f=49.9:0.1:50                         % Runs 2 times
             counter=counter+1;
             if(rem(counter,500)==0)
                 disp(iter_disp)
                 disp(counter)
             end
-                y=(1+alpha_flicker*sin(beta*2*pi*f*t));
+                y=(1+alpha_flicker*sin(beta*2*pi*f*t)).*sin(2*pi*f*t);
                 y = awgn(y, SNR(i));
                 z= vertcat(z,y);
                 cl=vertcat(cl,x);
@@ -278,9 +280,9 @@ counter=0;
 for i = 1:snr_len
     count=0;
     for alpha=0.1:0.1428571429:0.8                          % Runs 5 times
-        for F_t=300:959.1836734694:5000                     % Runs 5 times
-            for t3=0.04:0.008163265306:0.08                 % Runs 5 times
-                for tau=0.008:0.0082051282:0.040           % Runs 4 times
+        for F_t=250:300:1500                     % Runs 5 times
+            for t3=0.015:0.0138888:0.14                 % Runs 10 times
+                for tau=0.008:0.025:0.040            % Runs 2 times
                     for f=49.9:0.1:50                       % Runs 2 times
                     counter=counter+1;
                     if(rem(counter,500)==0)
@@ -411,14 +413,15 @@ t2i=[0.1, 0.09, 0.06];
 counter=0;
 for i = 1:snr_len
     count=0;
-    h1=3;
-    h2=5;
-    for alpha=0.1:0.2051282051:0.9                         % Runs 4 times  
+    h1=7;
+    for alpha=0.1:0.26:0.9                         % Runs 4 times  
         for t1=0.04:0.0036734694:0.058                    % Runs 5 times
             for f=49.9:0.1:50                        % Runs 2 times 
                 for alpha3=0.05:0.025:0.15               % Runs 5 times
-                    for alpha5=0.05:0.0204081633:0.15       % Runs 5 times
-                        alpha1 = sqrt(1 - alpha3^2 - alpha5^2);
+                    for frac5=0.4:0.1:0.8       % Runs 5 times
+                        alpha5=frac5*alpha3;
+                        alpha7=frac5*alpha5;
+                        alpha1 = sqrt(1 - alpha3^2 - alpha5^2- alpha7^2);
                         counter=counter+1;
                         if(rem(counter,500)==0)
                             disp(iter_disp)
@@ -427,13 +430,12 @@ for i = 1:snr_len
                         count=count+1;
                         [index,remin] = quorem(sym(count),sym(334));
                         
-                        if(rem(count,200)==0)
-                            h1=h1+4;   %%3,7,11,15,19
-                            h2=h2+4;     %5,9,13,17,21
+                        if(rem(count,125)==0)
+                            h1=h1+2;   %%7,9,11,13,15,19,21
                         end
                         
                         t2=t1+t2i(index+1);                %5 cycles
-                        y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1*sin(2*pi*f*t)+ alpha3*sin(h1*2*pi*f*t)+ alpha5*sin(h2*2*pi*f*t));
+                        y = (1-alpha*((heaviside(t-t1)-heaviside(t-t2)))).*(alpha1*sin(2*pi*f*t)+ alpha3*sin(3*2*pi*f*t)+ alpha5*sin(5*2*pi*f*t)+ alpha7*sin(h1*2*pi*f*t));
                         y = awgn(y, SNR(i));
                         z= vertcat(z,y);
                         cl=vertcat(cl,x);
