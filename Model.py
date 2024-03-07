@@ -6,8 +6,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, Flatten, Dense
 from tensorflow.keras.utils import to_categorical
 
-num_classes = 6
-classes = ['Normal', 'Sag', 'Swell', 'Interruption', 'Notch', 'Spike']
+num_classes = 7
+classes = ['Normal', 'Sag', 'Swell', 'Interruption', 'Notch', 'Spike', 'Flicker']
 
 Sine_data = scipy.io.loadmat('Sine_data.mat')
 X_Sine_train = Sine_data['sine_train']
@@ -69,6 +69,16 @@ y_Spike_train = Spike_label_data['spike_label_train']
 y_Spike_val = Spike_label_data['spike_label_val']
 y_Spike_test = Spike_label_data['spike_label_test']
 
+Flicker_data = scipy.io.loadmat('Flicker_data.mat')
+X_Flicker_train = Sine_data['flicker_train']
+X_Flicker_val = Sine_data['flicker_val']
+X_Flicker_test = Sine_data['flicker_test']
+
+Flicker_label_data = scipy.io.loadmat('Flicker_label_data.mat')
+y_Flicker_train = Flicker_label_data['flicker_label_train']
+y_Flicker_val = Flicker_label_data['flicker_label_val']
+y_Flicker_test = Flicker_label_data['flicker_label_test']
+
 # Convert lists of arrays to numpy arrays
 X_Sine_train = np.array([np.vstack(chunk) for chunk in X_Sine_train])
 X_Sine_val = np.array([np.vstack(chunk) for chunk in X_Sine_val])
@@ -123,14 +133,24 @@ y_Spike_train = y_Spike_train.reshape(np.shape(X_Spike_train)[0])
 y_Spike_test = y_Spike_test.reshape(np.shape(X_Spike_test)[0])
 y_Spike_val = y_Spike_val.reshape(np.shape(X_Spike_val)[0])
 
-X_train = np.concatenate([X_Sine_train, X_Sag_train, X_Swell_train, X_Interruption_train, X_Notch_train, X_Spike_train], axis = 0)
-y_train = np.concatenate([y_Sine_train, y_Sag_train, y_Swell_train, y_Interruption_train, y_Notch_train, y_Spike_train], axis = 0)
+# Convert lists of arrays to numpy arrays
+X_Flicker_train = np.array([np.vstack(chunk) for chunk in X_Flicker_train])
+X_Flicker_val = np.array([np.vstack(chunk) for chunk in X_Flicker_val])
+X_Flicker_test = np.array([np.vstack(chunk) for chunk in X_Flicker_test])
 
-X_test = np.concatenate([X_Sine_test, X_Sag_test, X_Swell_test, X_Interruption_test, X_Notch_test, X_Spike_test], axis = 0)
-y_test = np.concatenate([y_Sine_test, y_Sag_test, y_Swell_test, y_Interruption_test, y_Notch_test, y_Spike_test], axis = 0)
+y_Flicker_train = y_Flicker_train.reshape(np.shape(X_Flicker_train)[0])
+y_Flicker_test = y_Flicker_test.reshape(np.shape(X_Flicker_test)[0])
+y_Flicker_val = y_Flicker_val.reshape(np.shape(X_Flicker_val)[0])
 
-X_val = np.concatenate([X_Sine_val, X_Sag_val, X_Swell_val, X_Interruption_val, X_Notch_val, X_Spike_val], axis = 0)
-y_val = np.concatenate([y_Sine_val, y_Sag_val, y_Swell_val, y_Interruption_val, y_Notch_val, y_Spike_val], axis = 0)
+
+X_train = np.concatenate([X_Sine_train, X_Sag_train, X_Swell_train, X_Interruption_train, X_Notch_train, X_Spike_train, X_Flicker_train], axis = 0)
+y_train = np.concatenate([y_Sine_train, y_Sag_train, y_Swell_train, y_Interruption_train, y_Notch_train, y_Spike_train, y_Flicker_train], axis = 0)
+
+X_test = np.concatenate([X_Sine_test, X_Sag_test, X_Swell_test, X_Interruption_test, X_Notch_test, X_Spike_test, X_Flicker_test], axis = 0)
+y_test = np.concatenate([y_Sine_test, y_Sag_test, y_Swell_test, y_Interruption_test, y_Notch_test, y_Spike_test, y_Flicker_test], axis = 0)
+
+X_val = np.concatenate([X_Sine_val, X_Sag_val, X_Swell_val, X_Interruption_val, X_Notch_val, X_Spike_val, X_Flicker_val], axis = 0)
+y_val = np.concatenate([y_Sine_val, y_Sag_val, y_Swell_val, y_Interruption_val, y_Notch_val, y_Spike_val, y_Flicker_val], axis = 0)
 
 y_train = to_categorical(y_train, num_classes = num_classes)
 y_test = to_categorical(y_test, num_classes = num_classes)
@@ -143,6 +163,7 @@ print('The shape of X_Swell_train is : ',np.shape(X_Swell_train))
 print('The shape of X_Interruption_train is : ',np.shape(X_Interruption_train))
 print('The shape of X_Notch_train is : ',np.shape(X_Notch_train))
 print('The shape of X_Spike_train is : ',np.shape(X_Spike_train))
+print('The shape of X_Flicker_train is : ',np.shape(X_Flicker_train))
 print("\n")
 print('The shape of y_Sine_train is : ',np.shape(y_Sine_train))
 print('The shape of y_Sag_train is : ',np.shape(y_Sag_train))
@@ -150,6 +171,7 @@ print('The shape of y_Swell_train is : ',np.shape(y_Swell_train))
 print('The shape of y_Interruption_train is : ',np.shape(y_Interruption_train))
 print('The shape of y_Notch_train is : ',np.shape(y_Notch_train))
 print('The shape of y_Spike_train is : ',np.shape(y_Spike_train))
+print('The shape of y_Flicker_train is : ',np.shape(y_Flicker_train))
 print("\n")
 print("The shape of X_train is : ", np.shape(X_train))
 print("The shape of y_train is : ", np.shape(y_train))
