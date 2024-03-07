@@ -363,9 +363,9 @@ fig_Spike = {'Spike disturbance with 20db Noise','Spike disturbance with 30db No
 counter=0;
 for i = 1:snr_len
     count=0;
-    for alpha=0.1:0.0150753769:0.4;            % Runs 20 times
-        for t1=0.001:0.0003614458:0.01;        % Runs 25 times
-              for f=49.9:0.1:50                        % Runs 2 times
+    for alpha=0.15:0.0100401606:0.4;            % Runs 25 times
+        for t1=0.0005:0.000944:0.009;        % Runs 10 times
+              for f=49.95:0.05:50.1                        % Runs 4 times
               counter=counter+1;
                 if(rem(counter,500)==0)
                     disp(iter_disp)
